@@ -8,9 +8,9 @@ import java.util.regex.*;
 import org.apache.commons.io.*;
 import org.apache.commons.lang.*;
 import org.apache.commons.lang.math.NumberUtils;
-import org.apache.commons.logging.*;
 
 import com.google.appengine.repackaged.com.google.common.collect.*;
+import com.google.appengine.repackaged.org.apache.commons.logging.*;
 import com.lehphyro.btracs.*;
 
 public class BTracsScraperDefaultImpl implements BTracsScraper {
