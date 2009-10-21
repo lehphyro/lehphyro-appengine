@@ -1,9 +1,9 @@
 package com.lehphyro.btracs;
 
-import com.google.appengine.repackaged.com.google.common.collect.*;
+import java.util.*;
 
 public interface BTracsScraper {
 
-	ImmutableList<WebSite> getWebSitesClosedMostOfTheTime() throws Exception;
+	List<WebSite> getWebSitesClosedMostOfTheTime() throws Exception;
 
 }
