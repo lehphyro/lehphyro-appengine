@@ -20,8 +20,8 @@ public class BTracsWebSitesClosedMostOfTheTimeServlet extends HttpServlet {
 	
 	@Override
 	public void init(ServletConfig config) throws ServletException {
-		injector = Guice.createInjector(new BTracsModule());
 		super.init(config);
+		injector = Guice.createInjector(new BTracsModule());
 	}
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
