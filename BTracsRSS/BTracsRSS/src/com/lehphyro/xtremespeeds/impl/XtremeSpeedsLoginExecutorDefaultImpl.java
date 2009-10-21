@@ -3,6 +3,7 @@ package com.lehphyro.xtremespeeds.impl;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.logging.*;
 
 import javax.mail.*;
 import javax.mail.internet.*;
@@ -10,7 +11,6 @@ import javax.mail.internet.*;
 import org.apache.commons.io.*;
 import org.apache.commons.lang.*;
 
-import com.google.appengine.repackaged.org.apache.commons.logging.*;
 import com.lehphyro.xtremespeeds.*;
 
 public class XtremeSpeedsLoginExecutorDefaultImpl implements XtremeSpeedsLoginExecutor {
@@ -20,7 +20,7 @@ public class XtremeSpeedsLoginExecutorDefaultImpl implements XtremeSpeedsLoginEx
 	private static final String PASSWORD = "teste00";
 	private static final String SUCCESSFUL_LOGIN_MESSAGE = "You have succesfully logged in...";
 
-	private static final Log log = LogFactory.getLog(XtremeSpeedsLoginExecutorDefaultImpl.class);
+	private static final Logger logger = Logger.getLogger(XtremeSpeedsLoginExecutorDefaultImpl.class.getName());
 
 	@Override
 	public void login() throws Exception {
@@ -51,7 +51,7 @@ public class XtremeSpeedsLoginExecutorDefaultImpl implements XtremeSpeedsLoginEx
 			StringBuilder pageBody = new StringBuilder();
 			
 			if (responseCode == HttpURLConnection.HTTP_OK) {
-				log.info("HTTP OK");
+				logger.info("HTTP OK");
 				reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), CharEncoding.ISO_8859_1));
 				String line; boolean loggedIn = false;
 				while ((line = reader.readLine()) != null) {
@@ -59,13 +59,13 @@ public class XtremeSpeedsLoginExecutorDefaultImpl implements XtremeSpeedsLoginEx
 						loggedIn = true;
 					}
 					pageBody.append(line).append('\n');
-					log.info(line);
+					logger.info(line);
 				}
 				if (!loggedIn) {
 					notifyLoginFailed(responseCode, responseMessage, pageBody.toString());
 				}
 			} else {
-				log.info("HTTP " + connection.getResponseCode() +  ": " + connection.getResponseMessage());
+				logger.info("HTTP " + connection.getResponseCode() +  ": " + connection.getResponseMessage());
 				notifyLoginFailed(responseCode, responseMessage, null);
 			}
 		} finally {

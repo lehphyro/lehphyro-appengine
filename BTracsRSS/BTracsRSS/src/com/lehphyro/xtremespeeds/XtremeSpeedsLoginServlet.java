@@ -1,18 +1,18 @@
 package com.lehphyro.xtremespeeds;
 
 import java.io.*;
+import java.util.logging.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-import com.google.appengine.repackaged.org.apache.commons.logging.*;
 import com.google.inject.*;
 
 public class XtremeSpeedsLoginServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -6811462642444170647L;
 
-	private static final Log log = LogFactory.getLog(XtremeSpeedsLoginServlet.class);
+	private static final Logger logger = Logger.getLogger(XtremeSpeedsLoginServlet.class.getName());
 
 	private Injector injector;
 	
@@ -30,7 +30,7 @@ public class XtremeSpeedsLoginServlet extends HttpServlet {
 			executor.login();
 			response.getWriter().write("OK");
 		} catch (Throwable t) {
-			log.error("Error loging to xtremespeeds", t);
+			logger.log(Level.SEVERE, "Error loging to xtremespeeds", t);
 		}
 	}
 

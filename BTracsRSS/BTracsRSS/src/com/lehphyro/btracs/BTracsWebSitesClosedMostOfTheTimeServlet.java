@@ -2,11 +2,10 @@ package com.lehphyro.btracs;
 
 import java.io.*;
 import java.util.*;
+import java.util.logging.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-
-import org.apache.commons.logging.*;
 
 import com.google.inject.*;
 
@@ -14,7 +13,7 @@ public class BTracsWebSitesClosedMostOfTheTimeServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 3483149536624901826L;
 	
-	private static final Log log = LogFactory.getLog(BTracsWebSitesClosedMostOfTheTimeServlet.class);
+	private static final Logger logger = Logger.getLogger(BTracsWebSitesClosedMostOfTheTimeServlet.class.getName());
 
 	private Injector injector;
 	
@@ -33,7 +32,7 @@ public class BTracsWebSitesClosedMostOfTheTimeServlet extends HttpServlet {
 			BTracsFeeder feeder = injector.getInstance(BTracsFeeder.class);
 			feeder.feed("Web Sites Closed Most of the Time", sites, response.getWriter());
 		} catch (Throwable e) {
-			log.error("Error generating feed", e);
+			logger.log(Level.SEVERE, "Error generating feed", e);
 		}
 	}
 }
