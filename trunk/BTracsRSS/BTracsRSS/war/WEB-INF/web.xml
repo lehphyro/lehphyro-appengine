@@ -8,8 +8,17 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<servlet-name>WebSitesClosedMostOfTheTime</servlet-name>
 		<servlet-class>com.lehphyro.btracs.BTracsWebSitesClosedMostOfTheTimeServlet</servlet-class>
 	</servlet>
+	<servlet>
+		<servlet-name>XtremeSpeedsLoginServlet</servlet-name>
+		<servlet-class>com.lehphyro.xtremespeeds.XtremeSpeedsLoginServlet</servlet-class>
+	</servlet>
+	
 	<servlet-mapping>
 		<servlet-name>WebSitesClosedMostOfTheTime</servlet-name>
 		<url-pattern>/btracs-closed-most-of-the-time</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>XtremeSpeedsLoginServlet</servlet-name>
+		<url-pattern>/xtreme-speeds-login</url-pattern>
 	</servlet-mapping>
 </web-app>

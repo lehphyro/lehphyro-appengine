@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+	<cron>
+		<url>/xtreme-speeds-login</url>
+		<description>Login automatico no site xtremespeeds.net</description>
+		<schedule>every day 04:00</schedule>
+		<timezone>America/Sao_Paulo</timezone>
+	</cron>
+</cronentries>
