@@ -23,10 +23,12 @@ public class XtremeSpeedsLoginServlet extends HttpServlet {
 	}
 	
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/plain");
 		try {
 			XtremeSpeedsLoginExecutor executor = injector.getInstance(XtremeSpeedsLoginExecutor.class);
 			executor.login();
+			response.getWriter().write("OK");
 		} catch (Throwable t) {
 			log.error("Error loging to xtremespeeds", t);
 		}
