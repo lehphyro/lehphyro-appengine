@@ -12,7 +12,7 @@ import org.apache.commons.lang.math.NumberUtils;
 
 import com.lehphyro.btracs.*;
 
-public class BTracsScraperDefaultImpl implements BTracsScraper {
+public class BTracsScraperDefaultImpl implements BTracsScrapper {
 	
 	private static final Logger log = Logger.getLogger(BTracsScraperDefaultImpl.class.getName());
 	

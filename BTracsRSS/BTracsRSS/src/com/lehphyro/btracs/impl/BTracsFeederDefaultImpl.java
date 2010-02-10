@@ -13,9 +13,9 @@ import de.nava.informa.impl.basic.*;
 public class BTracsFeederDefaultImpl implements BTracsFeeder {
 
 	@Override
-	public void feed(String title, List<WebSite> sites, Writer writer) throws IOException {
+	public void feed(List<WebSite> sites, Writer writer) throws IOException {
 		ChannelBuilder builder = new ChannelBuilder();
-		ChannelIF channel = builder.createChannel(title);
+		ChannelIF channel = builder.createChannel("Web Sites Closed Most of the Time");
 
 		for (WebSite site : sites) {
 			String description = String.format("Category: %s - Language: %s - Ranking: %s", site.getCategory(), site.getLanguage(), site.getRanking());

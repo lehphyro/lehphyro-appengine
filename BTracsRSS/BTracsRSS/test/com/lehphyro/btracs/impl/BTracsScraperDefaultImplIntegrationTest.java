@@ -11,7 +11,7 @@ public class BTracsScraperDefaultImplIntegrationTest {
 
 	@Test
 	public void test() throws Exception {
-		BTracsScraper scraper = new BTracsScraperDefaultImpl();
+		BTracsScrapper scraper = new BTracsScraperDefaultImpl();
 		List<WebSite> sites = scraper.getWebSitesClosedMostOfTheTime();
 		
 		for (WebSite site : sites) {
@@ -19,7 +19,7 @@ public class BTracsScraperDefaultImplIntegrationTest {
 		}
 		
 		BTracsFeeder feeder = new BTracsFeederDefaultImpl();
-		feeder.feed("Web Sites Closed Most of the Time", sites, new PrintWriter(System.out));
+		feeder.feed(sites, new PrintWriter(System.out));
 	}
 
 }

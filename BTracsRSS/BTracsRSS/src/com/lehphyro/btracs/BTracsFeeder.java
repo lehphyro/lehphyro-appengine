@@ -5,6 +5,6 @@ import java.util.*;
 
 public interface BTracsFeeder {
 
-	void feed(String title, List<WebSite> sites, Writer writer) throws IOException;
+	void feed(List<WebSite> sites, Writer writer) throws IOException;
 
 }
