@@ -18,12 +18,13 @@ public class BTracsWebSitesClosedMostOfTheTimeServlet extends HttpServlet {
 		response.setContentType("text/xml");
 		
 		try {
-			BTracsScraper scraper = new BTracsScraperDefaultImpl();
-			List<WebSite> sites = scraper.getWebSitesClosedMostOfTheTime();
+			BTracsScrapper scrapper = new BTracsScraperDefaultImpl();
+			List<WebSite> sites = scrapper.getWebSitesClosedMostOfTheTime();
 			BTracsFeeder feeder = new BTracsFeederDefaultImpl();
-			feeder.feed("Web Sites Closed Most of the Time", sites, response.getWriter());
+			feeder.feed(sites, response.getWriter());
 		} catch (Throwable e) {
 			logger.log(Level.SEVERE, "Error generating feed", e);
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 }

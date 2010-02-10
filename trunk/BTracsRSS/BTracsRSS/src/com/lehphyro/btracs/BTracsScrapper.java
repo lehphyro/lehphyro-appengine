@@ -2,7 +2,7 @@ package com.lehphyro.btracs;
 
 import java.util.*;
 
-public interface BTracsScraper {
+public interface BTracsScrapper {
 
 	List<WebSite> getWebSitesClosedMostOfTheTime() throws Exception;
 

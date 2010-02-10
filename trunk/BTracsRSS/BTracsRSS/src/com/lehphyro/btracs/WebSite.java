@@ -6,11 +6,11 @@ public class WebSite implements Serializable, Comparable<WebSite> {
 
 	private static final long serialVersionUID = 1193197669369442544L;
 	
-	private String name;
-	private String url;
-	private String category;
-	private String language;
-	private Integer ranking;
+	private final String name;
+	private final String url;
+	private final String category;
+	private final String language;
+	private final Integer ranking;
 
 	public static class Builder {
 		private String name;
