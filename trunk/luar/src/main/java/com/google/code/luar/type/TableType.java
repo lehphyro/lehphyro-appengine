@@ -4,7 +4,7 @@ import java.util.*;
 
 public class TableType extends AbstractType {
 
-	private Map value;
+	private Map<Object, Object> value;
 	
 	public byte getType() {
 		return TABLE;
@@ -18,11 +18,12 @@ public class TableType extends AbstractType {
 		if (value == null) {
 			return true;
 		}
-		return (value instanceof Map);
+		return (value instanceof Map<?, ?>);
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void doSetValue(Object value) {
-		this.value = (Map)value;
+		this.value = (Map<Object, Object>)value;
 	}
 
 }

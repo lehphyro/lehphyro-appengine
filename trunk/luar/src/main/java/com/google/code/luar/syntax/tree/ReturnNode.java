@@ -6,13 +6,13 @@ import com.google.code.luar.syntax.*;
 
 public class ReturnNode extends StatementNode {
 
-	private List expressions;
+	private List<ExpressionNode> expressions;
 	
 	public ReturnNode() {
-		expressions = new ArrayList();
+		expressions = new ArrayList<ExpressionNode>();
 	}
 
-	public List getExpressions() {
+	public List<ExpressionNode> getExpressions() {
 		return Collections.unmodifiableList(expressions);
 	}
 	

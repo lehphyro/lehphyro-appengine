@@ -1,4 +1,4 @@
-package com.google.code.luar.parser.impl;
+package com.google.code.luar.syntax.parser.impl;
 
 import com.google.code.luar.syntax.*;
 import com.google.code.luar.syntax.lexer.*;

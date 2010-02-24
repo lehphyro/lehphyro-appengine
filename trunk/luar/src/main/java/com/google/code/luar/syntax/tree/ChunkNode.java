@@ -6,12 +6,12 @@ import com.google.code.luar.syntax.*;
 
 public class ChunkNode extends AbstractNode {
 
-	private List statements;
+	private List<StatementNode> statements;
 	
 	private Node lastNode;
 	
 	public ChunkNode() {
-		statements = new ArrayList();
+		statements = new ArrayList<StatementNode>();
 	}
 	
 	public void setParent(Node parent) {
@@ -22,7 +22,7 @@ public class ChunkNode extends AbstractNode {
 		return null;
 	}
 	
-	public List getStatements() {
+	public List<StatementNode> getStatements() {
 		return Collections.unmodifiableList(statements);
 	}
 	
@@ -35,7 +35,7 @@ public class ChunkNode extends AbstractNode {
 			lastNode = newNode(token);
 		}
 		if (lastNode.addToken(token) == false) {
-			statements.add(lastNode);
+			statements.add((StatementNode)lastNode);
 			lastNode = null;
 		}
 		return true;

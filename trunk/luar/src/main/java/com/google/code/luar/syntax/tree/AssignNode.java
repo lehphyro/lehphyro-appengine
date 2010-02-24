@@ -6,16 +6,16 @@ import com.google.code.luar.syntax.*;
 
 public class AssignNode extends StatementNode {
 
-	private List variables;
+	private List<VariableNode> variables;
 	
-	private List expressions;
+	private List<ExpressionNode> expressions;
 	
 	public AssignNode() {
-		variables = new ArrayList();
-		expressions = new ArrayList();
+		variables = new ArrayList<VariableNode>();
+		expressions = new ArrayList<ExpressionNode>();
 	}
 
-	public List getExpressions() {
+	public List<ExpressionNode> getExpressions() {
 		return Collections.unmodifiableList(expressions);
 	}
 
@@ -23,7 +23,7 @@ public class AssignNode extends StatementNode {
 		expressions.add(expression);
 	}
 
-	public List getVariables() {
+	public List<VariableNode> getVariables() {
 		return variables;
 	}
 

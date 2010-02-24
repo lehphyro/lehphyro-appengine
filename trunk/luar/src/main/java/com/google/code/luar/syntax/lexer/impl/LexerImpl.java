@@ -182,7 +182,7 @@ public class LexerImpl implements Lexer {
 			}
 		}
 		String value = buffer.toString();
-		Byte typeFound = (Byte)Token.literals.get(value);
+		Byte typeFound = (Byte)Token.LITERALS.get(value);
 		byte type;
 		if (typeFound == null) {
 			type = Token.IDENTIFIER;

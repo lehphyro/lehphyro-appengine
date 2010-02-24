@@ -13,10 +13,10 @@ public class FunctionCallNode extends ExpressionNode {
 	
 	private ExpressionNode expression;
 	
-	private List arguments;
+	private List<ExpressionNode> arguments;
 	
 	public FunctionCallNode() {
-		arguments = new ArrayList();
+		arguments = new ArrayList<ExpressionNode>();
 	}
 
 	public ExpressionNode getExpression() {
@@ -35,7 +35,7 @@ public class FunctionCallNode extends ExpressionNode {
 		this.type = type;
 	}
 
-	public List getArguments() {
+	public List<ExpressionNode> getArguments() {
 		return Collections.unmodifiableList(arguments);
 	}
 	

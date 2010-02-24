@@ -60,55 +60,55 @@ public class Token {
 	public static final byte EOF = 126;
 	public static final byte SKIP = 127;
 	
-	public static final Map literals;
+	public static final Map<String, Byte> LITERALS;
 	static {
-		literals = new HashMap(TRIPLE_DOTS);
-		literals.put("and", new Byte(AND));
-		literals.put("break", new Byte(BREAK));
-		literals.put("do", new Byte(DO));
-		literals.put("else", new Byte(ELSE));
-		literals.put("elseif", new Byte(ELSEIF));
-		literals.put("end", new Byte(END));
-		literals.put("false", new Byte(FALSE));
-		literals.put("for", new Byte(FOR));
-		literals.put("function", new Byte(FUNCTION));
-		literals.put("if", new Byte(IF));
-		literals.put("in", new Byte(IN));
-		literals.put("local", new Byte(LOCAL));
-		literals.put("nil", new Byte(NIL));
-		literals.put("not", new Byte(NOT));
-		literals.put("or", new Byte(OR));
-		literals.put("repeat", new Byte(REPEAT));
-		literals.put("return", new Byte(RETURN));
-		literals.put("then", new Byte(THEN));
-		literals.put("true", new Byte(TRUE));
-		literals.put("until", new Byte(UNTIL));
-		literals.put("while", new Byte(WHILE));
+		LITERALS = new HashMap<String, Byte>();
+		LITERALS.put("and", new Byte(AND));
+		LITERALS.put("break", new Byte(BREAK));
+		LITERALS.put("do", new Byte(DO));
+		LITERALS.put("else", new Byte(ELSE));
+		LITERALS.put("elseif", new Byte(ELSEIF));
+		LITERALS.put("end", new Byte(END));
+		LITERALS.put("false", new Byte(FALSE));
+		LITERALS.put("for", new Byte(FOR));
+		LITERALS.put("function", new Byte(FUNCTION));
+		LITERALS.put("if", new Byte(IF));
+		LITERALS.put("in", new Byte(IN));
+		LITERALS.put("local", new Byte(LOCAL));
+		LITERALS.put("nil", new Byte(NIL));
+		LITERALS.put("not", new Byte(NOT));
+		LITERALS.put("or", new Byte(OR));
+		LITERALS.put("repeat", new Byte(REPEAT));
+		LITERALS.put("return", new Byte(RETURN));
+		LITERALS.put("then", new Byte(THEN));
+		LITERALS.put("true", new Byte(TRUE));
+		LITERALS.put("until", new Byte(UNTIL));
+		LITERALS.put("while", new Byte(WHILE));
 		
-		literals.put("+", new Byte(PLUS));
-		literals.put("-", new Byte(MINUS));
-		literals.put("*", new Byte(MULTIPLY));
-		literals.put("/", new Byte(DIVIDE));
-		literals.put("^", new Byte(POW));
-		literals.put("=", new Byte(ASSIGN));
-		literals.put("~=", new Byte(NOT_EQUAL));
-		literals.put("<=", new Byte(LESS_OR_EQUAL));
-		literals.put(">=", new Byte(GREATER_OR_EQUAL));
-		literals.put("<", new Byte(LESS));
-		literals.put(">", new Byte(GREATER));
-		literals.put("==", new Byte(EQUAL));
-		literals.put("(", new Byte(LEFT_PARENTHESIS));
-		literals.put(")", new Byte(RIGHT_PARENTHESIS));
-		literals.put("{", new Byte(LEFT_CURLY));
-		literals.put("}", new Byte(RIGHT_CURLY));
-		literals.put("[", new Byte(LEFT_BRACK));
-		literals.put("]", new Byte(RIGHT_BRACK));
-		literals.put(";", new Byte(SEMICOLON));
-		literals.put(":", new Byte(COLON));
-		literals.put(",", new Byte(COMMA));
-		literals.put(".", new Byte(DOT));
-		literals.put("..", new Byte(DOUBLE_DOTS));
-		literals.put("...", new Byte(TRIPLE_DOTS));
+		LITERALS.put("+", new Byte(PLUS));
+		LITERALS.put("-", new Byte(MINUS));
+		LITERALS.put("*", new Byte(MULTIPLY));
+		LITERALS.put("/", new Byte(DIVIDE));
+		LITERALS.put("^", new Byte(POW));
+		LITERALS.put("=", new Byte(ASSIGN));
+		LITERALS.put("~=", new Byte(NOT_EQUAL));
+		LITERALS.put("<=", new Byte(LESS_OR_EQUAL));
+		LITERALS.put(">=", new Byte(GREATER_OR_EQUAL));
+		LITERALS.put("<", new Byte(LESS));
+		LITERALS.put(">", new Byte(GREATER));
+		LITERALS.put("==", new Byte(EQUAL));
+		LITERALS.put("(", new Byte(LEFT_PARENTHESIS));
+		LITERALS.put(")", new Byte(RIGHT_PARENTHESIS));
+		LITERALS.put("{", new Byte(LEFT_CURLY));
+		LITERALS.put("}", new Byte(RIGHT_CURLY));
+		LITERALS.put("[", new Byte(LEFT_BRACK));
+		LITERALS.put("]", new Byte(RIGHT_BRACK));
+		LITERALS.put(";", new Byte(SEMICOLON));
+		LITERALS.put(":", new Byte(COLON));
+		LITERALS.put(",", new Byte(COMMA));
+		LITERALS.put(".", new Byte(DOT));
+		LITERALS.put("..", new Byte(DOUBLE_DOTS));
+		LITERALS.put("...", new Byte(TRIPLE_DOTS));
 	}
 	
 // Token attributes
@@ -180,11 +180,8 @@ public class Token {
 		} else if (type == EOF) {
 			return "EOF";
 		}
-		
-		Iterator it = literals.entrySet().iterator();
-		Map.Entry entry;
-		while (it.hasNext()) {
-			entry = (Map.Entry)it.next();
+
+		for (Map.Entry<String, Byte> entry : LITERALS.entrySet()) {
 			if (((Byte)entry.getValue()).byteValue() == type) {
 				return (String)entry.getKey();
 			}

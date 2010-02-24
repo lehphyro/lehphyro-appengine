@@ -10,10 +10,10 @@ public class FunctionDefinitionNode extends StatementNode {
 	
 	private BlockNode body;
 	
-	private List arguments;
+	private List<ExpressionNode> arguments;
 
 	public FunctionDefinitionNode() {
-		arguments = new ArrayList();
+		arguments = new ArrayList<ExpressionNode>();
 	}
 	
 	public BlockNode getBody() {
@@ -32,7 +32,7 @@ public class FunctionDefinitionNode extends StatementNode {
 		this.variable = variable;
 	}
 
-	public List getArguments() {
+	public List<ExpressionNode> getArguments() {
 		return Collections.unmodifiableList(arguments);
 	}
 	

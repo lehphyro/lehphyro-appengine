@@ -2,14 +2,18 @@ package com.google.code.luar.syntax.lexer.impl;
 
 import java.io.*;
 
+import org.junit.Test;
+
 import com.google.code.luar.syntax.*;
 import com.google.code.luar.syntax.lexer.*;
-import junit.framework.*;
 
-public class LexerImplTestCase extends TestCase {
+import static org.junit.Assert.*;
 
+public class LexerImplTest {
+
+	@Test
 	public void testNextToken() {
-		InputStream is = LexerImplTestCase.class.getResourceAsStream("hello.lua");
+		InputStream is = LexerImplTest.class.getResourceAsStream("hello.lua");
 		Lexer lexer = new LexerImpl(new InputStreamReader(is));
 		assertEquals(new Token(Token.IDENTIFIER, "io", 3, 1), lexer.nextToken());
 		assertEquals(new Token(Token.DOT, null, 3, 3), lexer.nextToken());
