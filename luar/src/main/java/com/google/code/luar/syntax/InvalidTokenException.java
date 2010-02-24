@@ -1,6 +1,8 @@
 package com.google.code.luar.syntax;
 
-public abstract class InvalidTokenException extends RuntimeException {
+public abstract class InvalidTokenException extends ParserException {
+
+	private static final long serialVersionUID = -2735353101295034723L;
 
 	private String value;
 	

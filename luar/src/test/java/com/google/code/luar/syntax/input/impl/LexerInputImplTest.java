@@ -2,18 +2,21 @@ package com.google.code.luar.syntax.input.impl;
 
 import java.io.*;
 
+import org.junit.Test;
+
 import com.google.code.luar.syntax.input.*;
 
-import junit.framework.*;
+import static org.junit.Assert.*;
 
-public class LexerInputImplTestCase extends TestCase {
+public class LexerInputImplTest {
 	
 	private String inputString;
 	
-	public LexerInputImplTestCase() {
+	public LexerInputImplTest() {
 		inputString = "Test input with something to feed the lexer input";
 	}
 
+	@Test
 	public void testReadForLookAhead() {
 		try {
 			LexerInput input = new LexerInputImpl(new StringReader(inputString), 10, 3);

@@ -4,13 +4,13 @@ import java.util.*;
 
 public class TableConstructorNode {
 
-	private List fields;
+	private List<FieldExpression> fields;
 	
 	public TableConstructorNode() {
-		fields = new ArrayList();
+		fields = new ArrayList<FieldExpression>();
 	}
 	
-	public List getFields() {
+	public List<FieldExpression> getFields() {
 		return Collections.unmodifiableList(fields);
 	}
 	
