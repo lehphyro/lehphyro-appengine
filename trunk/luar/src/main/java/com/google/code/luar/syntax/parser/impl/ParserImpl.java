@@ -19,7 +19,7 @@ public class ParserImpl implements Parser {
 		syntaxTree = new ChunkNode();
 		Token token;
 		try {
-			while ((token = lexer.nextToken()).getType() != Token.EOF) {
+			while ((token = lexer.nextToken()).getType() != Token.Type.EOF) {
 				syntaxTree.addToken(token);
 			}
 		} finally {
