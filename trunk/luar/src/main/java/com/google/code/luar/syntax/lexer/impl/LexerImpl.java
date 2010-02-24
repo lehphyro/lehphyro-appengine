@@ -63,7 +63,7 @@ public class LexerImpl implements Lexer {
 						doRightParenthesis(token);
 						break;
 					case ']':
-						doRightBrack(token);
+						doRightBracket(token);
 						break;
 					case '{':
 						doLeftCurly(token);
@@ -140,7 +140,7 @@ public class LexerImpl implements Lexer {
 						} else if (lookAhead(1) == '-') {
 							doMinus(token);
 						} else if (lookAhead(1) == '[') {
-							doLeftBrack(token);
+							doLeftBracket(token);
 						} else if (lookAhead(1) == '=') {
 							doAssign(token);
 						} else if (lookAhead(1) == '.' && lookAhead(2) == '.' && lookAhead(3) == '.') {
@@ -398,13 +398,13 @@ public class LexerImpl implements Lexer {
 		setTokenAttributes(Token.LEFT_CURLY, null, column, token);
 	}
 
-	protected void doLeftBrack(Token token) throws IOException {
+	protected void doLeftBracket(Token token) throws IOException {
 		int column = getColumn();
 		readNext();
 		setTokenAttributes(Token.LEFT_BRACK, null, column, token);
 	}
 
-	protected void doRightBrack(Token token) throws IOException {
+	protected void doRightBracket(Token token) throws IOException {
 		int column = getColumn();
 		readNext();
 		setTokenAttributes(Token.RIGHT_BRACK, null, column, token);
