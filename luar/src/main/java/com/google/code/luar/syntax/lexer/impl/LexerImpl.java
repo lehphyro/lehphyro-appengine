@@ -14,13 +14,15 @@ import com.google.code.luar.type.*;
 public class LexerImpl implements Lexer {
 
 	private LexerInput input;
-	
+
 	private int currentLine;
-	
 	private int currentColumn;
-	
 	private StringBuffer buffer;
 
+	private Token.Type currentTokenType;
+    private String currentTokenValue;
+    private int currentTokenColumn;
+    
 	public LexerImpl() {
 		this((LexerInput)null);
 	}
@@ -50,48 +52,45 @@ public class LexerImpl implements Lexer {
 	
 	public Token nextToken() {
 		try {
-			Token token = new Token(Token.UNKNOWN);
-			
-			while (token.getType() == Token.UNKNOWN ||
-				   token.getType() == Token.SKIP) {
+			while (currentTokenType == null || currentTokenType == Token.Type.SKIP) {
 				prepareBuffer();
 				switch (lookAhead(1)) {
 					case '(':
-						doLeftParenthesis(token);
+						doLeftParenthesis();
 						break;
 					case ')':
-						doRightParenthesis(token);
+						doRightParenthesis();
 						break;
 					case ']':
-						doRightBracket(token);
+						doRightBracket();
 						break;
 					case '{':
-						doLeftCurly(token);
+						doLeftCurly();
 						break;
 					case '}':
-						doRightCurly(token);
+						doRightCurly();
 						break;
 					case ':':
-						doColon(token);
+						doColon();
 						break;
 					case ',':
-						doComma(token);
+						doComma();
 						break;
 					case ';':
-						doSemicolon(token);
+						doSemicolon();
 						break;
 					case '\t':
 					case '\n':
 					case '\u000c':
 					case '\r':
 					case ' ':
-						doWhiteSpace(token);
+						doWhiteSpace();
 						break;
 					case '\'':
-						doStringLiteral(token, StringType.SINGLE_QUOTE_DELIMITER);
+						doStringLiteral(StringType.SINGLE_QUOTE_DELIMITER);
 						break;
 					case '"':
-						doStringLiteral(token, StringType.DOUBLE_QUOTE_DELIMITER);
+						doStringLiteral(StringType.DOUBLE_QUOTE_DELIMITER);
 						break;
 					case '0':
 					case '1':
@@ -103,63 +102,64 @@ public class LexerImpl implements Lexer {
 					case '7':
 					case '8':
 					case '9':
-						doNumber(token);
+						doNumber();
 						break;
 					case '+':
-						doPlus(token);
+						doPlus();
 						break;
 					case '*':
-						doMultiply(token);
+						doMultiply();
 						break;
 					case '/':
-						doDivide(token);
+						doDivide();
 						break;
 					case '^':
-						doPlus(token);
+						doPlus();
 						break;
 					case '#':
-						doComment(token);
+						doComment();
 						break;
 					default:
 						if (lookAhead(1) == '=' && lookAhead(2) == '=') {
-							doEqual(token);
+							doEqual();
 						} else if (lookAhead(1) == '~' && lookAhead(2) == '=') {
-							doNotEqual(token);
+							doNotEqual();
 						} else if (lookAhead(1) == '>' && lookAhead(2) == '=') {
-							doGreaterOrEqual(token);
+							doGreaterOrEqual();
 						} else if (lookAhead(1) == '<' && lookAhead(2) == '=') {
-							doLessOrEqual(token);
+							doLessOrEqual();
 						} else if (lookAhead(1) == '-' && lookAhead(2) == '-') {
-							doComment(token);
+							doComment();
 						} else if (lookAhead(1) == '[' && lookAhead(2) == '[') {
-							doStringLiteral(token, StringType.DOUBLE_SQUARE_BRACKETS);
+							doStringLiteral(StringType.DOUBLE_SQUARE_BRACKETS);
 						} else if (lookAhead(1) == '>') {
-							doGreater(token);
+							doGreater();
 						} else if (lookAhead(1) == '<') {
-							doLess(token);
+							doLess();
 						} else if (lookAhead(1) == '-') {
-							doMinus(token);
+							doMinus();
 						} else if (lookAhead(1) == '[') {
-							doLeftBracket(token);
+							doLeftBracket();
 						} else if (lookAhead(1) == '=') {
-							doAssign(token);
+							doAssign();
 						} else if (lookAhead(1) == '.' && lookAhead(2) == '.' && lookAhead(3) == '.') {
-							doTripleDots(token);
+							doTripleDots();
 						} else if (lookAhead(1) == '.' && lookAhead(2) == '.') {
-							doDoubleDots(token);
+							doDoubleDots();
 						} else if (lookAhead(1) == '.') {
-							doDot(token);
+							doDot();
 						} else if (Character.isJavaIdentifierStart(lookAhead(1))) {
-							doIdentifier(token);
+							doIdentifier();
+						} else if (isEOF(lookAhead(1))) {
+							doEOF();
 						} else {
-							if (isEOF(lookAhead(1))) { // EOF
-								doEOF(token);
-							} else {
-								throw new InvalidCharacterException(lookAhead(1), getLine(), getColumn());
-							}
+							throw new InvalidCharacterException(lookAhead(1), currentLine, currentColumn);
 						}
 				}
 			}
+			
+			Token token = new Token(currentTokenType, currentTokenValue, currentLine, currentTokenColumn);
+			resetTokenAttributes();
 			
 			return token;
 		} catch (IOException e) {
@@ -171,8 +171,8 @@ public class LexerImpl implements Lexer {
 		input.close();
 	}
 	
-	protected void doIdentifier(Token token) throws IOException {
-		int column = getColumn();
+	protected void doIdentifier() throws IOException {
+		int column = currentColumn;
 		boolean keepReading = true;
 		while (keepReading) {
 			if (Character.isJavaIdentifierPart(lookAhead(1))) {
@@ -182,17 +182,14 @@ public class LexerImpl implements Lexer {
 			}
 		}
 		String value = buffer.toString();
-		Byte typeFound = (Byte)Token.LITERALS.get(value);
-		byte type;
+		Token.Type typeFound = (Token.Type)Token.LITERALS.get(value);
 		if (typeFound == null) {
-			type = Token.IDENTIFIER;
-		} else {
-			type = typeFound.byteValue();
+			typeFound = Token.Type.IDENTIFIER;
 		}
-		setTokenAttributes(type, value, column, token);
+		setTokenAttributes(typeFound, value, column);
 	}
 
-	protected void doComment(Token token) throws IOException {
+	protected void doComment() throws IOException {
 		// Read the first two '--'
 		readNext(); readNext();
 		
@@ -201,27 +198,27 @@ public class LexerImpl implements Lexer {
 			try {
 				readBracketedString();
 			} catch (InvalidStringException e) {
-				throw new InvalidCommentException(null, getLine(), getColumn());
+				throw new InvalidCommentException(null, currentLine, currentColumn);
 			}
 		} else { // Single-line comment
 			while (!isNewLine(lookAhead(1)) && !isEOF(lookAhead(1))) {
 				readNext(); // Just read until line-break or EOF
 			}
 		}
-		token.setType(Token.SKIP);
+		setTokenAttributes(Token.Type.SKIP, null, currentColumn);
 	}
 
-	protected void doNumber(Token token) throws IOException {
-		int column = getColumn();
+	protected void doNumber() throws IOException {
+		int column = currentColumn;
 		
 		while (isNumericValue(lookAhead(1), lookAhead(2), lookAhead(3))) {
 			buffer.append(readNext());
 		}
 		try {
 			Double value = Double.valueOf(buffer.toString());
-			setTokenAttributes(Token.NUMBER_LITERAL, value.toString(), column, token);
+			setTokenAttributes(Token.Type.NUMBER_LITERAL, value.toString(), column);
 		} catch (NumberFormatException e) {
-			throw new InvalidNumberException(buffer.toString(), getLine(), getColumn());
+			throw new InvalidNumberException(buffer.toString(), currentLine, currentColumn);
 		}
 	}
 	
@@ -242,8 +239,8 @@ public class LexerImpl implements Lexer {
 		return false;
 	}
 
-	protected void doStringLiteral(Token token, byte delimiter) throws IOException {
-		int column = getColumn();
+	protected void doStringLiteral(byte delimiter) throws IOException {
+		int column = currentColumn;
 		
 		switch (delimiter) {
 			case StringType.SINGLE_QUOTE_DELIMITER:
@@ -259,7 +256,7 @@ public class LexerImpl implements Lexer {
 				throw new IllegalArgumentException("Unknown delimiter type for string literal: " + delimiter);
 		}
 		
-		setTokenAttributes(Token.STRING_LITERAL, buffer.toString(), column, token);
+		setTokenAttributes(Token.Type.STRING_LITERAL, buffer.toString(), column);
 	}
 	
 	protected void doStringLiteralSingleDelimiter(char delimiter) throws IOException {
@@ -276,7 +273,7 @@ public class LexerImpl implements Lexer {
 		// Read second delimiter
 		read = readNext();
 		if (read != delimiter) {
-			throw new InvalidStringException(buffer.toString(), getLine(), getColumn());
+			throw new InvalidStringException(buffer.toString(), currentLine, currentColumn);
 		}
 		
 		processStringLiteral();
@@ -295,153 +292,153 @@ public class LexerImpl implements Lexer {
 		}
 	}
 
-	protected void doWhiteSpace(Token token) throws IOException {
+	protected void doWhiteSpace() throws IOException {
 		while (isWhiteSpace(lookAhead(1))) {
 			readNext(); // Just read while white space
 		}
-		token.setType(Token.SKIP);
+		setTokenAttributes(Token.Type.SKIP, null, currentColumn);
 	}
 
-	protected void doLess(Token token) throws IOException {
-		int column = getColumn();
+	protected void doLess() throws IOException {
+		int column = currentColumn;
 		readNext();
-		setTokenAttributes(Token.LESS, null, column, token);
+		setTokenAttributes(Token.Type.LESS, null, column);
 	}
 
-	protected void doGreater(Token token) throws IOException {
-		int column = getColumn();
+	protected void doGreater() throws IOException {
+		int column = currentColumn;
 		readNext();
-		setTokenAttributes(Token.GREATER, null, column, token);
+		setTokenAttributes(Token.Type.GREATER, null, column);
 	}
 
-	protected void doEqual(Token token) throws IOException {
-		int column = getColumn();
+	protected void doEqual() throws IOException {
+		int column = currentColumn;
 		readNext(); readNext();
-		setTokenAttributes(Token.EQUAL, null,column, token);
+		setTokenAttributes(Token.Type.EQUAL, null, column);
 	}
 
-	protected void doNotEqual(Token token) throws IOException {
-		int column = getColumn();
+	protected void doNotEqual() throws IOException {
+		int column = currentColumn;
 		readNext(); readNext();
-		setTokenAttributes(Token.NOT_EQUAL, null, column, token);
+		setTokenAttributes(Token.Type.NOT_EQUAL, null, column);
 	}
 
-	protected void doLessOrEqual(Token token) throws IOException {
-		int column = getColumn();
+	protected void doLessOrEqual() throws IOException {
+		int column = currentColumn;
 		readNext(); readNext();
-		setTokenAttributes(Token.LESS_OR_EQUAL, null, column, token);
+		setTokenAttributes(Token.Type.LESS_OR_EQUAL, null, column);
 	}
 
-	protected void doGreaterOrEqual(Token token) throws IOException {
-		int column = getColumn();
+	protected void doGreaterOrEqual() throws IOException {
+		int column = currentColumn;
 		readNext(); readNext();
-		setTokenAttributes(Token.GREATER_OR_EQUAL, null, column, token);
+		setTokenAttributes(Token.Type.GREATER_OR_EQUAL, null, column);
 	}
 
-	protected void doPlus(Token token) throws IOException {
-		int column = getColumn();
+	protected void doPlus() throws IOException {
+		int column = currentColumn;
 		readNext();
-		setTokenAttributes(Token.PLUS, null, column, token);
+		setTokenAttributes(Token.Type.PLUS, null, column);
 	}
 
-	protected void doMinus(Token token) throws IOException {
-		int column = getColumn();
+	protected void doMinus() throws IOException {
+		int column = currentColumn;
 		readNext();
-		setTokenAttributes(Token.MINUS, null, column, token);
+		setTokenAttributes(Token.Type.MINUS, null, column);
 	}
 
-	protected void doMultiply(Token token) throws IOException {
-		int column = getColumn();
+	protected void doMultiply() throws IOException {
+		int column = currentColumn;
 		readNext();
-		setTokenAttributes(Token.MULTIPLY, null,column, token);
+		setTokenAttributes(Token.Type.MULTIPLY, null,column);
 	}
 
-	protected void doDivide(Token token) throws IOException {
-		int column = getColumn();
+	protected void doDivide() throws IOException {
+		int column = currentColumn;
 		readNext();
-		setTokenAttributes(Token.DIVIDE, null, column, token);
+		setTokenAttributes(Token.Type.DIVIDE, null, column);
 	}
 
-	protected void doAssign(Token token) throws IOException {
-		int column = getColumn();
+	protected void doAssign() throws IOException {
+		int column = currentColumn;
 		readNext();
-		setTokenAttributes(Token.ASSIGN, null, column, token);
+		setTokenAttributes(Token.Type.ASSIGN, null, column);
 	}
 
-	protected void doComma(Token token) throws IOException {
-		int column = getColumn();
+	protected void doComma() throws IOException {
+		int column = currentColumn;
 		readNext();
-		setTokenAttributes(Token.COMMA, null, column, token);
+		setTokenAttributes(Token.Type.COMMA, null, column);
 	}
 
-	protected void doColon(Token token) throws IOException {
-		int column = getColumn();
+	protected void doColon() throws IOException {
+		int column = currentColumn;
 		readNext();
-		setTokenAttributes(Token.COLON, null, column, token);
+		setTokenAttributes(Token.Type.COLON, null, column);
 	}
 	
-	protected void doSemicolon(Token token) throws IOException {
-		int column = getColumn();
+	protected void doSemicolon() throws IOException {
+		int column = currentColumn;
 		readNext();
-		setTokenAttributes(Token.SEMICOLON, null, column, token);
+		setTokenAttributes(Token.Type.SEMICOLON, null, column);
 	}
 
-	protected void doRightCurly(Token token) throws IOException {
-		int column = getColumn();
+	protected void doRightCurly() throws IOException {
+		int column = currentColumn;
 		readNext();
-		setTokenAttributes(Token.RIGHT_CURLY, null, column, token);
+		setTokenAttributes(Token.Type.RIGHT_CURLY, null, column);
 	}
 
-	protected void doLeftCurly(Token token) throws IOException {
-		int column = getColumn();
+	protected void doLeftCurly() throws IOException {
+		int column = currentColumn;
 		readNext();
-		setTokenAttributes(Token.LEFT_CURLY, null, column, token);
+		setTokenAttributes(Token.Type.LEFT_CURLY, null, column);
 	}
 
-	protected void doLeftBracket(Token token) throws IOException {
-		int column = getColumn();
+	protected void doLeftBracket() throws IOException {
+		int column = currentColumn;
 		readNext();
-		setTokenAttributes(Token.LEFT_BRACK, null, column, token);
+		setTokenAttributes(Token.Type.LEFT_BRACKET, null, column);
 	}
 
-	protected void doRightBracket(Token token) throws IOException {
-		int column = getColumn();
+	protected void doRightBracket() throws IOException {
+		int column = currentColumn;
 		readNext();
-		setTokenAttributes(Token.RIGHT_BRACK, null, column, token);
+		setTokenAttributes(Token.Type.RIGHT_BRACKET, null, column);
 	}
 
-	protected void doLeftParenthesis(Token token) throws IOException {
-		int column = getColumn();
+	protected void doLeftParenthesis() throws IOException {
+		int column = currentColumn;
 		readNext();
-		setTokenAttributes(Token.LEFT_PARENTHESIS, null, column, token);
+		setTokenAttributes(Token.Type.LEFT_PARENTHESIS, null, column);
 	}
 	
-	protected void doRightParenthesis(Token token) throws IOException {
-		int column = getColumn();
+	protected void doRightParenthesis() throws IOException {
+		int column = currentColumn;
 		readNext();
-		setTokenAttributes(Token.RIGHT_PARENTHESIS, null, column, token);
+		setTokenAttributes(Token.Type.RIGHT_PARENTHESIS, null, column);
 	}
 	
-	protected void doTripleDots(Token token) throws IOException {
-		int column = getColumn();
+	protected void doTripleDots() throws IOException {
+		int column = currentColumn;
 		readNext();	readNext();	readNext();
-		setTokenAttributes(Token.TRIPLE_DOTS, null, column, token);
+		setTokenAttributes(Token.Type.TRIPLE_DOTS, null, column);
 	}
 	
-	protected void doDoubleDots(Token token) throws IOException {
-		int column = getColumn();
+	protected void doDoubleDots() throws IOException {
+		int column = currentColumn;
 		readNext();	readNext();
-		setTokenAttributes(Token.DOUBLE_DOTS, null, column, token);
+		setTokenAttributes(Token.Type.DOUBLE_DOTS, null, column);
 	}
 	
-	protected void doDot(Token token) throws IOException {
-		int column = getColumn();
+	protected void doDot() throws IOException {
+		int column = currentColumn;
 		readNext();
-		setTokenAttributes(Token.DOT, null, column, token);
+		setTokenAttributes(Token.Type.DOT, null, column);
 	}
 
-	protected void doEOF(Token token) throws IOException {
-		token.setType(Token.EOF);
+	protected void doEOF() throws IOException {
+		setTokenAttributes(Token.Type.EOF, null, currentColumn);
 	}
 
 	protected char lookAhead(int length) throws IOException {
@@ -480,7 +477,7 @@ public class LexerImpl implements Lexer {
 			if (opened != closed) {
 				buffer.append(read);
 				if (isEOF(read)) {
-					throw new InvalidStringException(buffer.toString(), getLine(), getColumn());
+					throw new InvalidStringException(buffer.toString(), currentLine, currentColumn);
 				}
 			}
 		}
@@ -488,6 +485,16 @@ public class LexerImpl implements Lexer {
 		readNext();
 	}
 
+	protected void setTokenAttributes(Token.Type type, String value, int column) {
+		currentTokenType = type;
+		currentTokenValue = value;
+		currentTokenColumn = column;
+	}
+	
+	protected void resetTokenAttributes() {
+		setTokenAttributes(null, null, 0);
+	}
+	
 	protected boolean isWhiteSpace(char character) {
 		return character == ' ' ||
 			   character == '\t' ||
@@ -504,16 +511,6 @@ public class LexerImpl implements Lexer {
 		return character == LexerInput.EOF;
 	}
 	
-	protected void setTokenAttributes(byte type,
-	                                  String value,
-	                                  int column,
-	                                  Token token) {
-		token.setType(type);
-		token.setValue(value);
-		token.setColumn(column);
-		token.setLine(getLine());
-	}
-	
 	protected void updateLine(char read) {
 		if (isNewLine(read)) {
 			currentLine++;
@@ -526,14 +523,6 @@ public class LexerImpl implements Lexer {
 		} else {
 			currentColumn++;
 		}
-	}
-
-	protected int getLine() {
-		return currentLine;
-	}
-
-	protected int getColumn() {
-		return currentColumn;
 	}
 
 	protected void prepareBuffer() {

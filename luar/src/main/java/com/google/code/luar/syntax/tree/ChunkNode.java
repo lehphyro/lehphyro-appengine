@@ -43,7 +43,7 @@ public class ChunkNode extends AbstractNode {
 	
 	protected Node newNode(Token token) {
 		switch (token.getType()) {
-			case Token.IF:
+			case IF:
 				return new IfNode();
 			default:
 				throw new IllegalArgumentException("Token not supported: " + token);
