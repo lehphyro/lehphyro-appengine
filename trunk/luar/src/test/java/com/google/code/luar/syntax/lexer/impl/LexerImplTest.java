@@ -27,6 +27,8 @@ public class LexerImplTest {
 			assertEquals(new Token(COMMA, 3, 39), lexer.nextToken());
 			assertEquals(new Token(STRING_LITERAL, "!\\n", 3, 40), lexer.nextToken());
 			assertEquals(new Token(RIGHT_PARENTHESIS, 3, 45), lexer.nextToken());
+			
+			assertEquals(new Token(EOF, 4, 1), lexer.nextToken());
 		} finally {
 			lexer.close();
 		}
@@ -54,6 +56,8 @@ public class LexerImplTest {
 			assertPrint("b", 9, lexer);
 			assertPrint("c", 10, lexer);
 			assertPrint("d", 11, lexer);
+			
+			assertEquals(new Token(EOF, 12, 1), lexer.nextToken());
 		} finally {
 			lexer.close();
 		}
@@ -120,6 +124,8 @@ public class LexerImplTest {
 			assertEquals(new Token(COMMA, 3, 14), lexer.nextToken());
 			assertEquals(new Token(IDENTIFIER, "e", 3, 15), lexer.nextToken());
 			assertEquals(new Token(RIGHT_PARENTHESIS, 3, 16), lexer.nextToken());
+			
+			assertEquals(new Token(EOF, 3, 17), lexer.nextToken());
 		} finally {
 			lexer.close();
 		}
@@ -148,6 +154,170 @@ public class LexerImplTest {
 			assertEquals(new Token(NUMBER_LITERAL, "-123", 1, 28), lexer.nextToken());
 			assertEquals(new Token(COMMA, 1, 32), lexer.nextToken());
 			assertEquals(new Token(NUMBER_LITERAL, ".0008", 1, 34), lexer.nextToken());
+			
+			assertEquals(new Token(IDENTIFIER, "print", 2, 1), lexer.nextToken());
+			assertEquals(new Token(LEFT_PARENTHESIS, 2, 6), lexer.nextToken());
+			assertEquals(new Token(STRING_LITERAL, "a=", 2, 7), lexer.nextToken());
+			assertEquals(new Token(DOUBLE_DOTS, 2, 11), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "a", 2, 13), lexer.nextToken());
+			assertEquals(new Token(COMMA, 2, 14), lexer.nextToken());
+			assertEquals(new Token(STRING_LITERAL, "b=", 2, 16), lexer.nextToken());
+			assertEquals(new Token(DOUBLE_DOTS, 2, 20), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "b", 2, 22), lexer.nextToken());
+			assertEquals(new Token(COMMA, 2, 23), lexer.nextToken());
+		} finally {
+			lexer.close();
+		}
+	}
+	
+	@Test
+	public void testTables() {
+		Lexer lexer = getLexer("tables.lua");
+		try {
+			assertEquals(new Token(IDENTIFIER, "address", 1, 1), lexer.nextToken());
+			assertEquals(new Token(ASSIGN, 1, 8), lexer.nextToken());
+			assertEquals(new Token(LEFT_CURLY, 1, 9), lexer.nextToken());
+			assertEquals(new Token(RIGHT_CURLY, 1, 10), lexer.nextToken());
+			
+			assertEquals(new Token(IDENTIFIER, "address", 2, 1), lexer.nextToken());
+			assertEquals(new Token(DOT, 2, 8), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "StreetNumber", 2, 9), lexer.nextToken());
+			assertEquals(new Token(ASSIGN, 2, 21), lexer.nextToken());
+			assertEquals(new Token(NUMBER_LITERAL, "360", 2, 22), lexer.nextToken());
+
+			assertEquals(new Token(IDENTIFIER, "address", 3, 1), lexer.nextToken());
+			assertEquals(new Token(DOT, 3, 8), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "AptNumber", 3, 9), lexer.nextToken());
+			assertEquals(new Token(ASSIGN, 3, 18), lexer.nextToken());
+			assertEquals(new Token(STRING_LITERAL, "2a", 3, 19), lexer.nextToken());
+			
+			assertEquals(new Token(IDENTIFIER, "print", 5, 1), lexer.nextToken());
+			assertEquals(new Token(LEFT_PARENTHESIS, 5, 6), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "address", 5, 7), lexer.nextToken());
+			assertEquals(new Token(DOT, 5, 14), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "StreetNumber", 5, 15), lexer.nextToken());
+			assertEquals(new Token(COMMA, 5, 27), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "address", 5, 29), lexer.nextToken());
+			assertEquals(new Token(LEFT_BRACKET, 5, 36), lexer.nextToken());
+			assertEquals(new Token(STRING_LITERAL, "AptNumber", 5, 37), lexer.nextToken());
+			assertEquals(new Token(RIGHT_BRACKET, 5, 48), lexer.nextToken());
+			assertEquals(new Token(RIGHT_PARENTHESIS, 5, 49), lexer.nextToken());
+			
+			assertEquals(new Token(EOF, 7, 1), lexer.nextToken());
+		} finally {
+			lexer.close();
+		}
+	}
+	
+	@Test
+	public void testIf() {
+		Lexer lexer = getLexer("if.lua");
+		try {
+			assertEquals(new Token(IDENTIFIER, "a", 1, 1), lexer.nextToken());
+			assertEquals(new Token(ASSIGN, 1, 2), lexer.nextToken());
+			assertEquals(new Token(NUMBER_LITERAL, "1", 1, 3), lexer.nextToken());
+			
+			assertEquals(new Token(IF, 2, 1), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "a", 2, 4), lexer.nextToken());
+			assertEquals(new Token(EQUAL, 2, 5), lexer.nextToken());
+			assertEquals(new Token(NUMBER_LITERAL, "1", 2, 7), lexer.nextToken());
+			assertEquals(new Token(THEN, 2, 9), lexer.nextToken());
+			
+			assertEquals(new Token(IDENTIFIER, "print", 3, 5), lexer.nextToken());
+			assertEquals(new Token(LEFT_PARENTHESIS, 3, 11), lexer.nextToken());
+			assertEquals(new Token(STRING_LITERAL, "a is one", 3, 12), lexer.nextToken());
+			assertEquals(new Token(RIGHT_PARENTHESIS, 3, 22), lexer.nextToken());
+			
+			assertEquals(new Token(END, 4, 1), lexer.nextToken());
+			
+			assertEquals(new Token(EOF, 4, 4), lexer.nextToken());
+		} finally {
+			lexer.close();
+		}
+	}
+	
+	@Test
+	public void testConditionalAssignment() {
+		Lexer lexer = getLexer("conditional_assignment.lua");
+		try {
+			assertEquals(new Token(IDENTIFIER, "a", 1, 1), lexer.nextToken());
+			assertEquals(new Token(ASSIGN, 1, 2), lexer.nextToken());
+			assertEquals(new Token(NUMBER_LITERAL, "1", 1, 3), lexer.nextToken());
+			
+			assertEquals(new Token(IDENTIFIER, "b", 2, 1), lexer.nextToken());
+			assertEquals(new Token(ASSIGN, 2, 2), lexer.nextToken());
+			assertEquals(new Token(LEFT_PARENTHESIS, 2, 3), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "a", 2, 4), lexer.nextToken());
+			assertEquals(new Token(EQUAL, 2, 5), lexer.nextToken());
+			assertEquals(new Token(NUMBER_LITERAL, "1", 2, 7), lexer.nextToken());
+			assertEquals(new Token(RIGHT_PARENTHESIS, 2, 8), lexer.nextToken());
+			
+			assertEquals(new Token(AND, 2, 10), lexer.nextToken());
+			assertEquals(new Token(STRING_LITERAL, "one", 2, 14), lexer.nextToken());
+			assertEquals(new Token(OR, 2, 20), lexer.nextToken());
+			assertEquals(new Token(STRING_LITERAL, "not one", 2, 23), lexer.nextToken());
+			
+			assertEquals(new Token(EOF, 3, 1), lexer.nextToken());
+		} finally {
+			lexer.close();
+		}
+	}
+	
+	@Test
+	public void testWhile() {
+		Lexer lexer = getLexer("while.lua");
+		try {
+			assertEquals(new Token(IDENTIFIER, "a", 1, 1), lexer.nextToken());
+			assertEquals(new Token(ASSIGN, 1, 2), lexer.nextToken());
+			assertEquals(new Token(NUMBER_LITERAL, "1", 1, 3), lexer.nextToken());
+			
+			assertEquals(new Token(WHILE, 2, 1), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "a", 2, 7), lexer.nextToken());
+			assertEquals(new Token(NOT_EQUAL, 2, 8), lexer.nextToken());
+			assertEquals(new Token(NUMBER_LITERAL, "5", 2, 10), lexer.nextToken());
+			assertEquals(new Token(DO, 2, 12), lexer.nextToken());
+			
+			assertEquals(new Token(IDENTIFIER, "a", 3, 5), lexer.nextToken());
+			assertEquals(new Token(ASSIGN, 3, 6), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "a", 3, 7), lexer.nextToken());
+			assertEquals(new Token(PLUS, 3, 8), lexer.nextToken());
+			assertEquals(new Token(NUMBER_LITERAL, "1", 3, 9), lexer.nextToken());
+			
+			assertEquals(new Token(IDENTIFIER, "io", 4, 5), lexer.nextToken());
+			assertEquals(new Token(DOT, 4, 7), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "write", 4, 8), lexer.nextToken());
+			assertEquals(new Token(LEFT_PARENTHESIS, 4, 13), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "a", 4, 14), lexer.nextToken());
+			assertEquals(new Token(DOUBLE_DOTS, 4, 15), lexer.nextToken());
+			assertEquals(new Token(STRING_LITERAL, " ", 4, 17), lexer.nextToken());
+			assertEquals(new Token(RIGHT_PARENTHESIS, 4, 20), lexer.nextToken());
+			
+			assertEquals(new Token(END, 5, 1), lexer.nextToken());
+			assertEquals(new Token(EOF, 5, 4), lexer.nextToken());
+		} finally {
+			lexer.close();
+		}
+	}
+	
+	@Test
+	public void testFor() {
+		Lexer lexer = getLexer("for.lua");
+		try {
+			assertEquals(new Token(FOR, 1, 1), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "a", 1, 5), lexer.nextToken());
+			assertEquals(new Token(ASSIGN, 1, 6), lexer.nextToken());
+			assertEquals(new Token(NUMBER_LITERAL, "1", 1, 7), lexer.nextToken());
+			assertEquals(new Token(COMMA, 1, 8), lexer.nextToken());
+			assertEquals(new Token(NUMBER_LITERAL, "4", 1, 9), lexer.nextToken());
+			assertEquals(new Token(DO, 1, 11), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "io", 1, 14), lexer.nextToken());
+			assertEquals(new Token(DOT, 1, 16), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "write", 1, 17), lexer.nextToken());
+			assertEquals(new Token(LEFT_PARENTHESIS, 1, 22), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "a", 1, 23), lexer.nextToken());
+			assertEquals(new Token(RIGHT_PARENTHESIS, 1, 24), lexer.nextToken());
+			assertEquals(new Token(END, 1, 26), lexer.nextToken());
+			assertEquals(new Token(EOF, 1, 29), lexer.nextToken());
 		} finally {
 			lexer.close();
 		}

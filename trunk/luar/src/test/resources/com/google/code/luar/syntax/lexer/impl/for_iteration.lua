@@ -1,0 +1,1 @@
+for key,value in pairs({1,2,3,4}) do print(key, value) end
