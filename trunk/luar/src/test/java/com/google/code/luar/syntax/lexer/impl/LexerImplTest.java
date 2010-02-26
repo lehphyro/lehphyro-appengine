@@ -323,6 +323,11 @@ public class LexerImplTest {
 		}
 	}
 	
+	@Test
+	public void testForIteration() {
+		// TODO
+	}
+	
 	private void assertPrint(String varName, int line, Lexer lexer) {
 		assertEquals(new Token(IDENTIFIER, "print", line, 1), lexer.nextToken());
 		assertEquals(new Token(LEFT_PARENTHESIS, line, 6), lexer.nextToken());
