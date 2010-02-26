@@ -1,0 +1,1 @@
+for a=1,4 do io.write(a) end

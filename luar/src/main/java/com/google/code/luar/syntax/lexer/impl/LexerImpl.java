@@ -186,6 +186,8 @@ public class LexerImpl implements Lexer {
 		Token.Type typeFound = (Token.Type)Token.LITERALS.get(value);
 		if (typeFound == null) {
 			typeFound = Token.Type.IDENTIFIER;
+		} else {
+			value = null;
 		}
 		setTokenAttributes(typeFound, value, column);
 	}
