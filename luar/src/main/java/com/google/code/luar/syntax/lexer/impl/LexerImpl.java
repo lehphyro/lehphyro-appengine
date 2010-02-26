@@ -13,7 +13,7 @@ import com.google.code.luar.type.*;
  */
 public class LexerImpl implements Lexer {
 
-	private LexerInput input;
+	private final LexerInput input;
 
 	private int currentLine;
 	private int currentColumn;
@@ -22,6 +22,7 @@ public class LexerImpl implements Lexer {
 	private Token.Type currentTokenType;
     private String currentTokenValue;
     private int currentTokenColumn;
+    private int currentTokenLine;
     
 	public LexerImpl() {
 		this((LexerInput)null);
@@ -39,17 +40,9 @@ public class LexerImpl implements Lexer {
 		this.input = input;
 		this.currentLine = 1;
 		this.currentColumn = 1;
-		buffer = new StringBuffer();
+		this.buffer = new StringBuffer();
 	}
 
-	public void setInput(String input) {
-		setReader(new StringReader(input));
-	}
-	
-	public void setReader(Reader reader) {
-		this.input = new LexerInputImpl(reader);
-	}
-	
 	public Token nextToken() {
 		try {
 			while (currentTokenType == null || currentTokenType == Token.Type.SKIP) {
@@ -158,7 +151,7 @@ public class LexerImpl implements Lexer {
 				}
 			}
 			
-			Token token = new Token(currentTokenType, currentTokenValue, currentLine, currentTokenColumn);
+			Token token = new Token(currentTokenType, currentTokenValue, currentTokenLine, currentTokenColumn);
 			resetTokenAttributes();
 			
 			return token;
@@ -240,6 +233,7 @@ public class LexerImpl implements Lexer {
 	}
 
 	protected void doStringLiteral(byte delimiter) throws IOException {
+		int line = currentLine;
 		int column = currentColumn;
 		
 		switch (delimiter) {
@@ -256,7 +250,7 @@ public class LexerImpl implements Lexer {
 				throw new IllegalArgumentException("Unknown delimiter type for string literal: " + delimiter);
 		}
 		
-		setTokenAttributes(Token.Type.STRING_LITERAL, buffer.toString(), column);
+		setTokenAttributes(Token.Type.STRING_LITERAL, buffer.toString(), line, column);
 	}
 	
 	protected void doStringLiteralSingleDelimiter(char delimiter) throws IOException {
@@ -264,11 +258,14 @@ public class LexerImpl implements Lexer {
 		readNext();
 		
 		char read = lookAhead(1);
-		while (read != delimiter &&
-			  !isNewLine(read) &&
-			  !isEOF(read)) {
-			buffer.append(readNext());
-			read = lookAhead(1);
+		while (read != delimiter && !isNewLine(read) && !isEOF(read)) {
+			if (read == '\\' && lookAhead(2) == delimiter) { // Append escaped delimiter
+				readNext();
+				buffer.append(readNext());
+			} else {
+				buffer.append(readNext());
+				read = lookAhead(1);
+			}
 		}
 		// Read second delimiter
 		read = readNext();
@@ -461,7 +458,7 @@ public class LexerImpl implements Lexer {
 		readNext(); readNext();
 		
 		// If next is newline, does not include
-		if (lookAhead(1) == '\n') {
+		if (isNewLine(lookAhead(1))) {
 			readNext();
 		}
 		
@@ -486,25 +483,30 @@ public class LexerImpl implements Lexer {
 	}
 
 	protected void setTokenAttributes(Token.Type type, String value, int column) {
+		setTokenAttributes(type, value, currentLine, column);
+	}
+
+	protected void setTokenAttributes(Token.Type type, String value, int line, int column) {
 		currentTokenType = type;
 		currentTokenValue = value;
+		currentTokenLine = line;
 		currentTokenColumn = column;
 	}
-	
+
 	protected void resetTokenAttributes() {
 		setTokenAttributes(null, null, 0);
 	}
 	
 	protected boolean isWhiteSpace(char character) {
 		return character == ' ' ||
+			   character == '\r' ||
 			   character == '\t' ||
 			   character == '\u000c' ||
 			   isNewLine(character);
 	}
 	
 	protected boolean isNewLine(char character) {
-		return character == '\n' ||
-			   character == '\r';
+		return character == '\n';
 	}
 	
 	protected boolean isEOF(char character) {
