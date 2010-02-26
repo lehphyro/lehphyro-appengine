@@ -13,7 +13,7 @@ import static com.google.code.luar.syntax.Token.Type.*;
 
 public class LexerImplTest {
 
-	@Test @Ignore
+	@Test
 	public void testHello() {
 		Lexer lexer = getLexer("hello.lua");
 		try {
@@ -32,13 +32,13 @@ public class LexerImplTest {
 		}
 	}
 	
-	@Test @Ignore
+	@Test
 	public void testTypes() {
 		Lexer lexer = getLexer("types.lua");
 		try {
 			assertEquals(new Token(IDENTIFIER, "a", 3, 1), lexer.nextToken());
 			assertEquals(new Token(ASSIGN, 3, 2), lexer.nextToken());
-			assertEquals(new Token(NUMBER_LITERAL, "1.0", 3, 3), lexer.nextToken());
+			assertEquals(new Token(NUMBER_LITERAL, "1", 3, 3), lexer.nextToken());
 			assertEquals(new Token(IDENTIFIER, "b", 4, 1), lexer.nextToken());
 			assertEquals(new Token(ASSIGN, 4, 2), lexer.nextToken());
 			assertEquals(new Token(STRING_LITERAL, "abc", 4, 3), lexer.nextToken());
@@ -59,7 +59,7 @@ public class LexerImplTest {
 		}
 	}
 	
-	@Test @Ignore
+	@Test
 	public void testStrings() {
 		Lexer lexer = getLexer("strings.lua");
 		try {
@@ -98,15 +98,15 @@ public class LexerImplTest {
 			assertEquals(new Token(COMMA, 1, 8), lexer.nextToken());
 			assertEquals(new Token(IDENTIFIER, "e", 1, 9), lexer.nextToken());
 			assertEquals(new Token(ASSIGN, 1, 11), lexer.nextToken());
-			assertEquals(new Token(NUMBER_LITERAL, "1.0", 1, 13), lexer.nextToken());
+			assertEquals(new Token(NUMBER_LITERAL, "1", 1, 13), lexer.nextToken());
 			assertEquals(new Token(COMMA, 1, 14), lexer.nextToken());
-			assertEquals(new Token(NUMBER_LITERAL, "2.0", 1, 16), lexer.nextToken());
+			assertEquals(new Token(NUMBER_LITERAL, "2", 1, 16), lexer.nextToken());
 			assertEquals(new Token(COMMA, 1, 17), lexer.nextToken());
 			assertEquals(new Token(STRING_LITERAL, "three", 1, 19), lexer.nextToken());
 			assertEquals(new Token(COMMA, 1, 26), lexer.nextToken());
 			assertEquals(new Token(STRING_LITERAL, "four", 1, 28), lexer.nextToken());
 			assertEquals(new Token(COMMA, 1, 34), lexer.nextToken());
-			assertEquals(new Token(NUMBER_LITERAL, "5.0", 1, 36), lexer.nextToken());
+			assertEquals(new Token(NUMBER_LITERAL, "5", 1, 36), lexer.nextToken());
 			
 			assertEquals(new Token(IDENTIFIER, "print", 3, 1), lexer.nextToken());
 			assertEquals(new Token(LEFT_PARENTHESIS, 3, 6), lexer.nextToken());
@@ -120,6 +120,34 @@ public class LexerImplTest {
 			assertEquals(new Token(COMMA, 3, 14), lexer.nextToken());
 			assertEquals(new Token(IDENTIFIER, "e", 3, 15), lexer.nextToken());
 			assertEquals(new Token(RIGHT_PARENTHESIS, 3, 16), lexer.nextToken());
+		} finally {
+			lexer.close();
+		}
+	}
+	
+	@Test
+	public void testNumbers() {
+		Lexer lexer = getLexer("numbers.lua");
+		try {
+			assertEquals(new Token(IDENTIFIER, "a", 1, 1), lexer.nextToken());
+			assertEquals(new Token(COMMA, 1, 2), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "b", 1, 3), lexer.nextToken());
+			assertEquals(new Token(COMMA, 1, 4), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "c", 1, 5), lexer.nextToken());
+			assertEquals(new Token(COMMA, 1, 6), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "d", 1, 7), lexer.nextToken());
+			assertEquals(new Token(COMMA, 1, 8), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "e", 1, 9), lexer.nextToken());
+			assertEquals(new Token(ASSIGN, 1, 11), lexer.nextToken());
+			assertEquals(new Token(NUMBER_LITERAL, "1", 1, 13), lexer.nextToken());
+			assertEquals(new Token(COMMA, 1, 14), lexer.nextToken());
+			assertEquals(new Token(NUMBER_LITERAL, "1.123", 1, 16), lexer.nextToken());
+			assertEquals(new Token(COMMA, 1, 21), lexer.nextToken());
+			assertEquals(new Token(NUMBER_LITERAL, "1E9", 1, 23), lexer.nextToken());
+			assertEquals(new Token(COMMA, 1, 26), lexer.nextToken());
+			assertEquals(new Token(NUMBER_LITERAL, "-123", 1, 28), lexer.nextToken());
+			assertEquals(new Token(COMMA, 1, 32), lexer.nextToken());
+			assertEquals(new Token(NUMBER_LITERAL, ".0008", 1, 34), lexer.nextToken());
 		} finally {
 			lexer.close();
 		}

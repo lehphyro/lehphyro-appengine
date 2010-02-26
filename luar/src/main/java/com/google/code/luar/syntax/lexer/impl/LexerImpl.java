@@ -130,7 +130,11 @@ public class LexerImpl implements Lexer {
 						} else if (lookAhead(1) == '<') {
 							doLess();
 						} else if (lookAhead(1) == '-') {
-							doMinus();
+							if (Character.isDigit(lookAhead(2))) {
+								doNumber();
+							} else {
+								doMinus();
+							}
 						} else if (lookAhead(1) == '[') {
 							doLeftBracket();
 						} else if (lookAhead(1) == '=') {
@@ -140,7 +144,11 @@ public class LexerImpl implements Lexer {
 						} else if (lookAhead(1) == '.' && lookAhead(2) == '.') {
 							doDoubleDots();
 						} else if (lookAhead(1) == '.') {
-							doDot();
+							if (Character.isDigit(lookAhead(2))) {
+								doNumber();
+							} else {
+								doDot();
+							}
 						} else if (Character.isJavaIdentifierStart(lookAhead(1))) {
 							doIdentifier();
 						} else if (isEOF(lookAhead(1))) {
@@ -208,8 +216,7 @@ public class LexerImpl implements Lexer {
 			buffer.append(readNext());
 		}
 		try {
-			Double value = Double.valueOf(buffer.toString());
-			setTokenAttributes(Token.Type.NUMBER_LITERAL, value.toString(), column);
+			setTokenAttributes(Token.Type.NUMBER_LITERAL, buffer.toString(), column);
 		} catch (NumberFormatException e) {
 			throw new InvalidNumberException(buffer.toString(), currentLine, currentColumn);
 		}
@@ -221,6 +228,8 @@ public class LexerImpl implements Lexer {
 		if (Character.isDigit(character1)) {
 			return true;
 		} else if (character1 == '.' && Character.isDigit(character2)) {
+			return true;
+		} else if (character1 == '-' && Character.isDigit(character2)) {
 			return true;
 		} else if (character1 == 'e' || character1 == 'E') {
 			if (Character.isDigit(character2)) {
