@@ -404,6 +404,85 @@ public class LexerImplTest {
 		}
 	}
 	
+	@Test
+	public void testFunctions() {
+		Lexer lexer = getLexer("functions.lua");
+		try {
+			assertEquals(new Token(FUNCTION, 1, 1), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "myFirstLuaFunction", 1, 10), lexer.nextToken());
+			assertEquals(new Token(LEFT_PARENTHESIS, 1, 28), lexer.nextToken());
+			assertEquals(new Token(RIGHT_PARENTHESIS, 1, 29), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "print", 2, 5), lexer.nextToken());
+			assertEquals(new Token(LEFT_PARENTHESIS, 2, 10), lexer.nextToken());
+			assertEquals(new Token(STRING_LITERAL, "My first lua function was called", 2, 11), lexer.nextToken());
+			assertEquals(new Token(RIGHT_PARENTHESIS, 2, 45), lexer.nextToken());
+			assertEquals(new Token(RETURN, 3, 5), lexer.nextToken());
+			assertEquals(new Token(NUMBER_LITERAL, "1", 3, 12), lexer.nextToken());
+			assertEquals(new Token(END, 4, 1), lexer.nextToken());
+			
+			assertEquals(new Token(IDENTIFIER, "myFirstLuaFunction", 7, 1), lexer.nextToken());
+			assertEquals(new Token(LEFT_PARENTHESIS, 7, 19), lexer.nextToken());
+			assertEquals(new Token(RIGHT_PARENTHESIS, 7, 20), lexer.nextToken());
+			
+			assertEquals(new Token(EOF, 7, 21), lexer.nextToken());
+		} finally {
+			lexer.close();
+		}
+	}
+	
+	@Test
+	public void testFormattedPrinting() {
+		Lexer lexer = getLexer("formatted_printing.lua");
+		try {
+			assertEquals(new Token(FUNCTION, 1, 1), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "printf", 1, 10), lexer.nextToken());
+			assertEquals(new Token(LEFT_PARENTHESIS, 1, 16), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "fmt", 1, 17), lexer.nextToken());
+			assertEquals(new Token(COMMA, 1, 20), lexer.nextToken());
+			assertEquals(new Token(TRIPLE_DOTS, 1, 22), lexer.nextToken());
+			assertEquals(new Token(RIGHT_PARENTHESIS, 1, 25), lexer.nextToken());
+			
+			assertEquals(new Token(IDENTIFIER, "io", 2, 5), lexer.nextToken());
+			assertEquals(new Token(DOT, 2, 7), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "write", 2, 8), lexer.nextToken());
+			assertEquals(new Token(LEFT_PARENTHESIS, 2, 13), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "string", 2, 14), lexer.nextToken());
+			assertEquals(new Token(DOT, 2, 20), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "format", 2, 21), lexer.nextToken());
+			assertEquals(new Token(LEFT_PARENTHESIS, 2, 27), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "fmt", 2, 28), lexer.nextToken());
+			assertEquals(new Token(COMMA, 2, 31), lexer.nextToken());
+			assertEquals(new Token(TRIPLE_DOTS, 2, 33), lexer.nextToken());
+			assertEquals(new Token(RIGHT_PARENTHESIS, 2, 36), lexer.nextToken());
+			assertEquals(new Token(RIGHT_PARENTHESIS, 2, 37), lexer.nextToken());
+			assertEquals(new Token(END, 3, 1), lexer.nextToken());
+			
+			assertEquals(new Token(IDENTIFIER, "printf", 5, 1), lexer.nextToken());
+			assertEquals(new Token(LEFT_PARENTHESIS, 5, 7), lexer.nextToken());
+			assertEquals(new Token(STRING_LITERAL, "Hello %s from %s on %s\\n", 5, 8), lexer.nextToken());
+			assertEquals(new Token(COMMA, 5, 34), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "os", 5, 36), lexer.nextToken());
+			assertEquals(new Token(DOT, 5, 38), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "getenv", 5, 39), lexer.nextToken());
+			assertEquals(new Token(STRING_LITERAL, "USER", 5, 45), lexer.nextToken());
+			assertEquals(new Token(OR, 5, 52), lexer.nextToken());
+			assertEquals(new Token(STRING_LITERAL, "there", 5, 55), lexer.nextToken());
+			assertEquals(new Token(COMMA, 5, 62), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "_VERSION", 5, 64), lexer.nextToken());
+			assertEquals(new Token(COMMA, 5, 72), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "os", 5, 74), lexer.nextToken());
+			assertEquals(new Token(DOT, 5, 76), lexer.nextToken());
+			assertEquals(new Token(IDENTIFIER, "date", 5, 77), lexer.nextToken());
+			assertEquals(new Token(LEFT_PARENTHESIS, 5, 81), lexer.nextToken());
+			assertEquals(new Token(RIGHT_PARENTHESIS, 5, 82), lexer.nextToken());
+			assertEquals(new Token(RIGHT_PARENTHESIS, 5, 83), lexer.nextToken());
+			
+			assertEquals(new Token(EOF, 5, 84), lexer.nextToken());
+		} finally {
+			lexer.close();
+		}
+	}
+	
 	private void assertPrint(String varName, int line, Lexer lexer) {
 		assertEquals(new Token(IDENTIFIER, "print", line, 1), lexer.nextToken());
 		assertEquals(new Token(LEFT_PARENTHESIS, line, 6), lexer.nextToken());
