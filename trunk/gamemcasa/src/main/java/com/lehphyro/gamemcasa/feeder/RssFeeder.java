@@ -23,7 +23,10 @@ public class RssFeeder implements Feeder {
 		
 		Collections.sort(games, new Game.AvailabilityComparator());
 		for (Game game : games) {
-			builder.createItem(channel, game.getName(), game.getAvailability().getName(), HomePage.HOME_URI.toURL());
+			builder.createItem(channel,
+							   game.getName() + " - " + game.getAvailability().getName(),
+							   game.getAvailability().getName(),
+							   HomePage.HOME_URI.toURL());
 		}
 		ChannelExporterIF exporter = new RSS_2_0_Exporter(writer, CharEncoding.UTF_8);
 		exporter.write(channel);
