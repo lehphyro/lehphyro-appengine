@@ -1,9 +1,8 @@
 package com.lehphyro.eatj;
 
-import java.util.*;
+import java.io.*;
 
-import javax.mail.*;
-import javax.mail.internet.*;
+import com.google.appengine.api.mail.*;
 
 public class EatJMailer {
 
@@ -12,16 +11,21 @@ public class EatJMailer {
 	
 	private static final String SERVER_DOWN_SUBJECT = "O servidor EatJ.com está fora do ar.\nLink: http://www.eatj.com";
 	private static final String SERVER_DOWN_BODY = "O servidor EatJ.com está fora do ar.";
+	
+	private static final String ERROR_SUBJECT = "Erro ao pingar servidor EatJ.com";
 
-	public void mailServerDown() throws MessagingException {
-		Session session = Session.getDefaultInstance(new Properties());
-		Message message = new MimeMessage(session);
-		message.setFrom(new InternetAddress(SENDER));
-		message.addRecipient(Message.RecipientType.TO, new InternetAddress(TO));
-		message.setSubject(SERVER_DOWN_SUBJECT);
-		message.setText(SERVER_DOWN_BODY);
-		
-		Transport.send(message);
+	public void mailServerDown() throws IOException {
+		MailService service = MailServiceFactory.getMailService();
+		MailService.Message message = new MailService.Message(SENDER, TO, SERVER_DOWN_SUBJECT, SERVER_DOWN_BODY);
+		service.send(message);
 	}
 
+	public void mailError(Throwable t) throws IOException {
+		StringWriter writer = new StringWriter();
+		t.printStackTrace(new PrintWriter(writer));
+		
+		MailService service = MailServiceFactory.getMailService();
+		MailService.Message message = new MailService.Message(SENDER, TO, ERROR_SUBJECT, writer.toString());
+		service.send(message);
+	}
 }
