@@ -9,8 +9,8 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<servlet-class>com.lehphyro.btracs.BTracsWebSitesClosedMostOfTheTimeServlet</servlet-class>
 	</servlet>
 	<servlet>
-		<servlet-name>XtremeSpeedsLoginServlet</servlet-name>
-		<servlet-class>com.lehphyro.xtremespeeds.XtremeSpeedsLoginServlet</servlet-class>
+		<servlet-name>EatJServerPingServlet</servlet-name>
+		<servlet-class>com.lehphyro.eatj.EatJServerPingServlet</servlet-class>
 	</servlet>
 	
 	<servlet-mapping>
@@ -18,7 +18,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<url-pattern>/btracs-closed-most-of-the-time</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>XtremeSpeedsLoginServlet</servlet-name>
-		<url-pattern>/xtreme-speeds-login</url-pattern>
+		<servlet-name>EatJServerPingServlet</servlet-name>
+		<url-pattern>/eatj-ping</url-pattern>
 	</servlet-mapping>
 </web-app>
