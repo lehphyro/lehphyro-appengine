@@ -14,14 +14,15 @@ public class EatJServerPingServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		EatJMailer mailer = new EatJMailer();
 		try {
 			EatJPinger pinger = new EatJPinger();
 			if (!pinger.ping()) {
-				EatJMailer mailer = new EatJMailer();
 				mailer.mailServerDown();
 			}
 		} catch (Throwable t) {
 			logger.log(Level.SEVERE, "Error pinging eatj", t);
+			mailer.mailError(t);
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
