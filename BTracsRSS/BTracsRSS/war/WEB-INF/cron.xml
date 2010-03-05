@@ -2,8 +2,32 @@
 <cronentries>
 	<cron>
 		<url>/eatj-ping</url>
-		<description>Ping do servidor eatj.com</description>
-		<schedule>every 5 minutes</schedule>
+		<description>Ping do servidor eatj.com as 9</description>
+		<schedule>every mon,tue,wed,thu,fri 9:00</schedule>
 		<timezone>America/Sao_Paulo</timezone>
 	</cron>
+    <cron>
+        <url>/eatj-ping</url>
+        <description>Ping do servidor eatj.com as 11</description>
+        <schedule>every mon,tue,wed,thu,fri 11:00</schedule>
+        <timezone>America/Sao_Paulo</timezone>
+    </cron>
+    <cron>
+        <url>/eatj-ping</url>
+        <description>Ping do servidor eatj.com as 13</description>
+        <schedule>every mon,tue,wed,thu,fri 13:00</schedule>
+        <timezone>America/Sao_Paulo</timezone>
+    </cron>
+    <cron>
+        <url>/eatj-ping</url>
+        <description>Ping do servidor eatj.com as 15</description>
+        <schedule>every mon,tue,wed,thu,fri 15:00</schedule>
+        <timezone>America/Sao_Paulo</timezone>
+    </cron>
+    <cron>
+        <url>/eatj-ping</url>
+        <description>Ping do servidor eatj.com as 17</description>
+        <schedule>every mon,tue,wed,thu,fri 17:00</schedule>
+        <timezone>America/Sao_Paulo</timezone>
+    </cron>
 </cronentries>
