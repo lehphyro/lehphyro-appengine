@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cronentries>
+<!-- EatJ desativou minha conta
 	<cron>
 		<url>/eatj-ping</url>
 		<description>Ping do servidor eatj.com as 9</description>
@@ -30,4 +31,5 @@
         <schedule>every mon,tue,wed,thu,fri 17:00</schedule>
         <timezone>America/Sao_Paulo</timezone>
     </cron>
+-->
 </cronentries>
