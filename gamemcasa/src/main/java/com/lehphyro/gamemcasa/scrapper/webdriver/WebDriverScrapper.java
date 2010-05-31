@@ -11,16 +11,13 @@ import com.lehphyro.gamemcasa.scrapper.webdriver.page.*;
 
 public class WebDriverScrapper implements Scrapper {
 
-	public static final String USERNAME = "lehphyro@gmail.com";
-	public static final String PASSWORD = "teste00";
-
 	@Override
 	public List<Game> getNextGames() {
 		WebDriver driver = new HtmlUnitDriver(false);
 		
 		HomePage homePage = new HomePage(driver);
 		LoginPage loginPage = homePage.access();
-		homePage = loginPage.login(WebDriverScrapper.USERNAME, WebDriverScrapper.PASSWORD);
+		homePage = loginPage.login(Credentials.USERNAME.getValue(), Credentials.PASSWORD.getValue());
 		
 		MyGamesPage myGamesPage = homePage.myGames();
 		Map<String, String> myGames = myGamesPage.listGames();

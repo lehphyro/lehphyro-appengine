@@ -4,7 +4,7 @@ import org.junit.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.htmlunit.*;
 
-import com.lehphyro.gamemcasa.scrapper.webdriver.*;
+import com.lehphyro.gamemcasa.*;
 
 public class MyGamesPageIntegrationTest {
 
@@ -14,7 +14,7 @@ public class MyGamesPageIntegrationTest {
 		
 		HomePage home = new HomePage(driver);
 		LoginPage login = home.access();
-		home = login.login(WebDriverScrapper.USERNAME, WebDriverScrapper.PASSWORD);
+		home = login.login(Credentials.USERNAME.getValue(), Credentials.PASSWORD.getValue());
 		
 		MyGamesPage myGames = home.myGames();
 		System.out.println(myGames.listGames());
