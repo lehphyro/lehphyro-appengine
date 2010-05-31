@@ -8,7 +8,7 @@ import javax.servlet.http.*;
 import org.apache.http.*;
 import org.slf4j.*;
 
-import com.lehphyro.gamemcasa.credentials.*;
+import com.lehphyro.gamemcasa.configuration.*;
 
 import static org.apache.commons.lang.StringUtils.*;
 
@@ -25,7 +25,7 @@ public class ConfigurationServlet extends HttpServlet {
 			String password = request.getParameter("password");
 			
 			if (!isBlank(username) && !isBlank(password)) {
-				new CredentialsStore().store(username, password);
+				new ConfigurationStore().save(username, password);
 				response.sendRedirect("/config/success.html");
 			} else {
 				response.sendError(HttpStatus.SC_BAD_REQUEST);

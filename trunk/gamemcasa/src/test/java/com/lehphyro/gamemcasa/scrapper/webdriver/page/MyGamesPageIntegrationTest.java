@@ -4,8 +4,6 @@ import org.junit.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.htmlunit.*;
 
-import com.lehphyro.gamemcasa.*;
-
 public class MyGamesPageIntegrationTest {
 
 	@Test
@@ -14,7 +12,7 @@ public class MyGamesPageIntegrationTest {
 		
 		HomePage home = new HomePage(driver);
 		LoginPage login = home.access();
-		home = login.login(Credentials.USERNAME.getValue(), Credentials.PASSWORD.getValue());
+		home = login.login("", "");
 		
 		MyGamesPage myGames = home.myGames();
 		System.out.println(myGames.listGames());
