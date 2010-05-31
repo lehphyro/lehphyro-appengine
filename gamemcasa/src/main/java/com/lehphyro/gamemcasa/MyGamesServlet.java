@@ -11,6 +11,7 @@ import org.slf4j.*;
 
 import com.lehphyro.gamemcasa.feeder.*;
 import com.lehphyro.gamemcasa.scrapper.*;
+import com.lehphyro.gamemcasa.scrapper.webdriver.*;
 
 public class MyGamesServlet extends HttpServlet {
 

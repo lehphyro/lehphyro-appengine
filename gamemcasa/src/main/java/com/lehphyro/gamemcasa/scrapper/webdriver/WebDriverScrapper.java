@@ -1,4 +1,4 @@
-package com.lehphyro.gamemcasa.scrapper;
+package com.lehphyro.gamemcasa.scrapper.webdriver;
 
 import java.util.*;
 
@@ -6,7 +6,8 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.htmlunit.*;
 
 import com.lehphyro.gamemcasa.*;
-import com.lehphyro.gamemcasa.scrapper.page.*;
+import com.lehphyro.gamemcasa.scrapper.*;
+import com.lehphyro.gamemcasa.scrapper.webdriver.page.*;
 
 public class WebDriverScrapper implements Scrapper {
 
