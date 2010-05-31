@@ -6,7 +6,7 @@ import java.util.*;
 import org.apache.commons.lang.*;
 
 import com.lehphyro.gamemcasa.*;
-import com.lehphyro.gamemcasa.scrapper.page.*;
+import com.lehphyro.gamemcasa.scrapper.webdriver.page.*;
 
 import de.nava.informa.core.*;
 import de.nava.informa.exporters.*;

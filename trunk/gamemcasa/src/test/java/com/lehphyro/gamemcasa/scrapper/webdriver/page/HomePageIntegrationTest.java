@@ -1,4 +1,4 @@
-package com.lehphyro.gamemcasa.scrapper.page;
+package com.lehphyro.gamemcasa.scrapper.webdriver.page;
 
 import org.junit.*;
 import org.openqa.selenium.*;
