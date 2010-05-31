@@ -4,8 +4,6 @@ import org.junit.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.htmlunit.*;
 
-import com.lehphyro.gamemcasa.*;
-
 import static org.junit.Assert.*;
 
 public class LoginPageIntegrationTest {
@@ -16,7 +14,7 @@ public class LoginPageIntegrationTest {
 		HomePage home = new HomePage(driver);
 		
 		LoginPage login = home.access();
-		home = login.login(Credentials.USERNAME.getValue(), Credentials.PASSWORD.getValue());
+		home = login.login("", "");
 		
 		assertEquals("Olá, Leandro de Oliveira Aparecido.\nVocê está logado.", home.getLoggedInMessage());
 	}
