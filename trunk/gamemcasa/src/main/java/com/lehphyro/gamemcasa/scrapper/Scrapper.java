@@ -6,6 +6,6 @@ import com.lehphyro.gamemcasa.*;
 
 public interface Scrapper {
 
-	List<Game> getNextGames();
+	List<Game> getNextGames() throws Exception;
 
 }
