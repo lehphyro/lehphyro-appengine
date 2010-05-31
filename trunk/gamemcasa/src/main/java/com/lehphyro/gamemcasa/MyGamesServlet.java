@@ -11,7 +11,7 @@ import org.slf4j.*;
 
 import com.lehphyro.gamemcasa.feeder.*;
 import com.lehphyro.gamemcasa.scrapper.*;
-import com.lehphyro.gamemcasa.scrapper.webdriver.*;
+import com.lehphyro.gamemcasa.scrapper.httpclient.*;
 
 public class MyGamesServlet extends HttpServlet {
 
@@ -25,7 +25,7 @@ public class MyGamesServlet extends HttpServlet {
 		response.setCharacterEncoding(CharEncoding.UTF_8);
 		
 		try {
-			Scrapper scrapper = new WebDriverScrapper();
+			Scrapper scrapper = new HttpClientScrapper();
 			List<Game> games = scrapper.getNextGames();
 			
 			Feeder feeder = new RssFeeder();
